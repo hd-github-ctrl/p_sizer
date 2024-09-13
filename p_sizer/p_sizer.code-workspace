@@ -1,0 +1,41 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"cursor.aipreview.enabled": true,
+		"ruff.enable": true,
+		"files.associations": {
+			"*.html": "jinja-html"
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"charliermarsh.ruff",
+			"cschleiden.vscode-github-actions",
+			"esbenp.prettier-vscode",
+			"littlefoxteam.vscode-python-test-adapter",
+			"ms-python.autopep8",
+			"ms-python.mypy-type-checker",
+			"ms-python.pylint",
+			"ms-python.python",
+			"ms-python.vscode-pylance",
+			"samuelcolvin.jinjahtml",
+			"Vue.volar"
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "current file",
+				"type": "debugpy", // 将类型从 python 更改为 debugpy
+				"request": "launch",
+				"program": "${file}",
+				"console": "integratedTerminal"
+			}
+		]
+	}
+}
