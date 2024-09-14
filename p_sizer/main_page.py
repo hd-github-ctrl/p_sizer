@@ -1,21 +1,34 @@
-import pandas as pd
 from nicegui import ui
-import FinanceDataReader as fdr  # pip install finance-datareader   // Open Source Financial data reader
+from p_sizer.header import add_head_html, add_header
+from p_sizer.style import features, heading, link_target, section_heading, subtitle, title
+from p_sizer.svg import face
 
-ui.add_body_html('''
-<link rel="stylesheet" type="text/css" href="https://code.highcharts.com/css/stocktools/gui.css">
-<link rel="stylesheet" type="text/css" href="https://code.highcharts.com/css/annotations/popup.css">
-<script src="https://code.highcharts.com/stock/highstock.js"></script>
-<script src="https://code.highcharts.com/stock/indicators/indicators-all.js"></script>
-<script src="https://code.highcharts.com/stock/modules/drag-panes.js"></script>
-<script src="https://code.highcharts.com/modules/annotations-advanced.js"></script>
-<script src="https://code.highcharts.com/modules/price-indicator.js"></script>
-<script src="https://code.highcharts.com/modules/full-screen.js"></script>
-<script src="https://code.highcharts.com/modules/stock-tools.js"></script>
-<script src="https://code.highcharts.com/stock/modules/heikinashi.js"></script>
-<script src="https://code.highcharts.com/stock/modules/hollowcandlestick.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
-''')
+import pandas as pd
+import FinanceDataReader as fdr  # pip install   // Open Source Financial data reader
+
+def create() -> None:
+    """Create the content of the main page."""
+    ui.context.client.content.classes('p-0 gap-0')
+    add_head_html()
+    add_header()
+    ui.add_body_html('''
+    <link rel="stylesheet" type="text/css" href="https://code.highcharts.com/css/stocktools/gui.css">
+    <link rel="stylesheet" type="text/css" href="https://code.highcharts.com/css/annotations/popup.css">
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/indicators/indicators-all.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/drag-panes.js"></script>
+    <script src="https://code.highcharts.com/modules/annotations-advanced.js"></script>
+    <script src="https://code.highcharts.com/modules/price-indicator.js"></script>
+    <script src="https://code.highcharts.com/modules/full-screen.js"></script>
+    <script src="https://code.highcharts.com/modules/stock-tools.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/heikinashi.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/hollowcandlestick.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    ''')
+
+    with ui.row().classes('w-full h-screen items-center gap-8 pr-4 no-wrap into-section'):
+        #face(half=True).classes('stroke-black dark:stroke-white w-[200px] md:w-[230px] lg:w-[300px]')
+        getPriceChart('005930','삼성전자')
 def getPriceChart(corpCode,corpName):
     # get Price Data // corpCode == stock code
     df = fdr.DataReader(corpCode,start='20200101')
@@ -43,7 +56,7 @@ def getPriceChart(corpCode,corpName):
     ohlc = df[['Timestamp','Open', 'High', 'Low', 'Close']].values.tolist()
     volume = df[['Timestamp','Volume']].values.tolist()
     series_data.append(volume_series)
-    container = ui.row()
+    container = ui.row().classes('w-full h-screen')
     ui.run_javascript(f'''
         (async () => {{
             const ohlc = {ohlc}
@@ -112,7 +125,7 @@ def getPriceChart(corpCode,corpName):
                 responsive: {{
                     rules: [{{
                         condition: {{
-                            maxWidth: 800
+                            maxWidth: 1024
                         }},
                         chartOptions: {{
                             rangeSelector: {{
@@ -127,6 +140,3 @@ def getPriceChart(corpCode,corpName):
 
 
 
-        
-# Samsung Electronics Co., Ltd. price Data
-getPriceChart('005930','삼성전자')

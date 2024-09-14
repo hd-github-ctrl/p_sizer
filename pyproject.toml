@@ -8,6 +8,11 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 nicegui = "^2.1.0"
+pandas = "^2.2.2"
+finance-datareader = "^0.9.94"
+beautifulsoup4 = "^4.12.3"
+plotly = "^5.24.1"
+
 
 [build-system]
 requires = ["poetry-core"]

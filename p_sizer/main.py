@@ -1,47 +1,27 @@
-from nicegui import ui
+import os
+from pathlib import Path
+from typing import Optional
+
+from fastapi import HTTPException, Request
+from fastapi.responses import RedirectResponse
+from starlette.middleware.sessions import SessionMiddleware
 
 
-def show_quick_operation_page():
-    ui.open("/quick_operation_page")
+from nicegui import app, ui
+from p_sizer import main_page, svg, fly
+
+on_fly = fly.setup()
+app.add_static_files('/favicon', str(Path(__file__).parent / 'favicon'))
+app.add_static_files('/fonts', str(Path(__file__).parent / 'fonts'))
+app.add_static_files('/static', str(Path(__file__).parent / 'static'))
+app.add_static_file(local_file=svg.PATH / 'logo.png', url_path='/logo.png')
+app.add_static_file(local_file=svg.PATH / 'logo_square.png', url_path='/logo_square.png')
 
 
-def show_trading_chart_page():
-    ui.open("/trading_chart_page")
+app.add_middleware(SessionMiddleware, secret_key=os.environ.get('NICEGUI_SECRET_KEY', ''))
 
-
-def show_position_page():
-    ui.open("/position_page")
-
-
-def show_settings_page():
-    ui.open("/settings_page")
-
-
-def show_template_page():
-    ui.open("/template_page")
-
-
-server_connected = True
-# 创建菜单栏
-with ui.header().classes("bg-blue-500") as header:
-    with ui.row():
-        ui.button("Menu", on_click=lambda: menu.open()).props("flat color=white")
-        with ui.menu() as menu:
-            ui.menu_item("Quick", on_click=show_quick_operation_page)
-            ui.menu_item("Trading", on_click=show_trading_chart_page)
-            ui.menu_item("Positions", on_click=show_position_page)
-            ui.menu_item("Template", on_click=show_template_page)
-            ui.menu_item("Settings", on_click=show_settings_page)
-        # 根据服务器连接状态显示不同图标
-        icon = ui.icon("wifi_off" if not server_connected else "wifi").props(
-            f'color={ "red" if not server_connected else "green"}'
-        )
-
-soption='''
-
-
-'''
-echart = ui.echart()
-
-
-ui.run()
+@ui.page('/')
+def _main_page() -> None:
+    main_page.create()
+    
+ui.run(uvicorn_reload_includes='*.py, *.css, *.html', reload=not on_fly, reconnect_timeout=10.0)
